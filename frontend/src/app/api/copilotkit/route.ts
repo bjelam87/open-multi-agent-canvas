@@ -18,8 +18,7 @@ const runtime = new CopilotRuntime({
     //   url: process.env.COPILOTKIT_END_POINT_URL as string,
     // }),
     langGraphPlatformEndpoint({
-      deploymentUrl:
-        "https://coagents-travel-python-efcd09921b465eb199d6233827f8ecfd.default.us.langgraph.app",
+      deploymentUrl: process.env.TRAVEL_AGENT_URL as string,
       langsmithApiKey,
       agents: [
         {
@@ -30,10 +29,10 @@ const runtime = new CopilotRuntime({
     }),
     langGraphPlatformEndpoint({
       langsmithApiKey,
-      deploymentUrl:
-        "https://matcopvili-demo-bf2f52e9a3445590abfe0919fc8dcd1c.default.us.langgraph.app",
+      deploymentUrl: process.env.RESEARCH_AGENT_URL as string,
       agents: [
         {
+          // This name is important, it will be used to identify the agent in the chat window
           name: "agent",
           description: "Research assistant",
         },
