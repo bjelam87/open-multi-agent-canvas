@@ -11,7 +11,7 @@ const queryClient = new QueryClient();
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <CopilotKit publicApiKey={process.env.NEXT_PUBLIC_COPILOT_CLOUD_API_KEY}>
+      <CopilotKit runtimeUrl="/api/copilotkit" showDevConsole={false}>
         {children}
       </CopilotKit>
       <ReactQueryDevtools initialIsOpen={false} />
