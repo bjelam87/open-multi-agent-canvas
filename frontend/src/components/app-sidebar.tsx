@@ -12,35 +12,6 @@ import Nango from "@nangohq/frontend";
 import { useCallback } from "react";
 
 export function AppSidebar() {
-  const handleConnectGmail = useCallback(async () => {
-    const nango = new Nango();
-    const connect = nango.openConnectUI({
-      onEvent: (event) => {
-        if (event.type === "close") {
-          // Handle modal closed.
-        } else if (event.type === "connect") {
-          // Handle auth flow successful.
-        }
-      },
-    });
-    await nango.auth("google-mail", "");
-
-    const res = await fetch("/api/integrations", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        endUserId: "YOUR_USER_ID",
-        endUserEmail: "user@example.com",
-        endUserDisplayName: "User Name",
-        integrationId: "google-oauth2",
-      }),
-    });
-    const data = await res.json();
-    if (data.sessionToken) {
-      connect.setSessionToken(data.sessionToken);
-    }
-  }, []);
-
   return (
     <Sidebar>
       <SidebarHeader>
@@ -60,10 +31,8 @@ export function AppSidebar() {
               <Settings className="h-4 w-4" />
               <span>Settings</span>
             </a>
-            <button
-              onClick={handleConnectGmail}
-              className="flex w-full items-center gap-2 rounded p-2 hover:bg-accent"
-            >
+            <button className="flex w-full items-center gap-2 rounded p-2 hover:bg-accent">
+              <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
               <Mail className="h-4 w-4" />
               <span>Connect Gmail</span>
             </button>
