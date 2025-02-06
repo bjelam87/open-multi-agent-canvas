@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
-import { CopilotKit } from "@copilotkit/react-core";
+import Providers from "@/providers/Providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,11 +28,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <CopilotKit
-          publicApiKey={process.env.NEXT_PUBLIC_COPILOT_CLOUD_API_KEY}
-        >
-          {children}
-        </CopilotKit>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
