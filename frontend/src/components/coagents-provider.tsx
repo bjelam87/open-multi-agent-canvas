@@ -1,6 +1,6 @@
 "use client";
 import { useCoAgent } from "@copilotkit/react-core";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 
 enum AvailableAgents {
   TRAVEL_AGENT = "travel",
