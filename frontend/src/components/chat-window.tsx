@@ -1,6 +1,5 @@
 "use client";
 import { CopilotChat } from "@copilotkit/react-ui";
-import { useCopilotAction } from "@copilotkit/react-core";
 import "@copilotkit/react-ui/styles.css";
 import {
   ActivityIcon,
@@ -12,9 +11,6 @@ import {
 import { FC } from "react";
 
 export const ChatWindow: FC = () => {
-  // useCopilotAction({
-  //   name: ""
-  // })
   return (
     <CopilotChat
       className="h-full flex flex-col"
