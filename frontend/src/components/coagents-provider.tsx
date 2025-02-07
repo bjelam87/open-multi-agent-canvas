@@ -1,6 +1,18 @@
 "use client";
 import { useCoAgent } from "@copilotkit/react-core";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+
+enum AvailableAgents {
+  TRAVEL_AGENT = "travel",
+  RESEARCH_AGENT = "agent",
+}
+
+/**
+ * Base Agent State
+ */
+export type BaseAgentState = {
+  __name__: AvailableAgents;
+};
 
 /**
  * Travel Agent Types
@@ -29,7 +41,7 @@ export type SearchProgress = {
   done: boolean;
 };
 
-export type TravelAgentState = {
+export type TravelAgentState = BaseAgentState & {
   trips: Trip[];
   selected_trip_id: string | null;
   search_progress?: SearchProgress[];
@@ -79,7 +91,7 @@ export interface Proposal {
   remarks?: string;
 }
 
-export interface ResearchAgentState {
+export type ResearchAgentState = BaseAgentState & {
   title: string;
   outline: Record<string, unknown>;
   proposal: Proposal;
@@ -89,22 +101,11 @@ export interface ResearchAgentState {
   tool: string;
   messages: { [key: string]: unknown }[]; // Array of AnyMessage objects with potential additional properties
   logs: Log[];
-}
+};
 
 export const AgentsContext = createContext<
-  | {
-      agents: Record<AvailableAgents, TravelAgentState | ResearchAgentState>;
-      setAgents: (
-        agents: Record<AvailableAgents, TravelAgentState | ResearchAgentState>
-      ) => void;
-    }
-  | undefined
->(undefined);
-
-enum AvailableAgents {
-  TRAVEL_AGENT = "travel",
-  RESEARCH_AGENT = "agent",
-}
+  Array<TravelAgentState | ResearchAgentState>
+>([]);
 
 /**
  * This provider wraps state from all agents
@@ -114,58 +115,27 @@ export const CoAgentsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [agents, setAgents] = useState<
-    Record<AvailableAgents, TravelAgentState | ResearchAgentState>
-  >({
-    [AvailableAgents.TRAVEL_AGENT]: {
-      trips: [],
-      selected_trip_id: null,
-      search_progress: [],
-    },
-    [AvailableAgents.RESEARCH_AGENT]: {
-      title: "",
-      outline: {},
-      proposal: {
-        [ProposalSectionName.Sections]: {},
-        timestamp: "",
-        approved: false,
-      },
-      sections: [],
-      sources: {},
-      tool: "",
-      messages: [],
-      logs: [],
-    },
-  });
-
-  useCoAgent({
+  const { state: travelAgentState } = useCoAgent({
     name: AvailableAgents.TRAVEL_AGENT,
-    state: agents[AvailableAgents.TRAVEL_AGENT],
-    setState: (state) =>
-      setAgents((prevAgents) => ({
-        ...prevAgents,
-        [AvailableAgents.TRAVEL_AGENT]:
-          typeof state === "function"
-            ? state(prevAgents[AvailableAgents.TRAVEL_AGENT])
-            : state,
-      })),
   });
 
-  useCoAgent({
+  const { state: researchAgentState } = useCoAgent({
     name: AvailableAgents.RESEARCH_AGENT,
-    state: agents[AvailableAgents.RESEARCH_AGENT],
-    setState: (state) =>
-      setAgents((prevAgents) => ({
-        ...prevAgents,
-        [AvailableAgents.RESEARCH_AGENT]:
-          typeof state === "function"
-            ? state(prevAgents[AvailableAgents.RESEARCH_AGENT])
-            : state,
-      })),
   });
 
   return (
-    <AgentsContext.Provider value={{ agents, setAgents }}>
+    <AgentsContext.Provider
+      value={[
+        {
+          ...travelAgentState,
+          __name__: AvailableAgents.TRAVEL_AGENT,
+        },
+        {
+          ...researchAgentState,
+          __name__: AvailableAgents.RESEARCH_AGENT,
+        },
+      ]}
+    >
       {children}
     </AgentsContext.Provider>
   );

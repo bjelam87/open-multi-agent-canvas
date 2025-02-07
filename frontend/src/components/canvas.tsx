@@ -5,7 +5,8 @@ import { ChatWindow } from "./chat-window";
 import { useCoAgents } from "./coagents-provider";
 
 export default function Canvas() {
-  const { agents } = useCoAgents();
+  const coAgents = useCoAgents();
+
   return (
     <div className="h-full w-full grid grid-cols-1 md:grid-cols-12">
       <div className="order-last md:order-first md:col-span-4 p-4 border-r h-screen overflow-y-auto">
@@ -16,8 +17,7 @@ export default function Canvas() {
         <div className="space-y-8">
           <Suspense fallback={<div>Loading...</div>}>
             <div className="flex flex-row gap-4">
-              <pre>{JSON.stringify(agents.agent, null, 2)}</pre>
-              <pre>{JSON.stringify(agents.travel, null, 2)}</pre>
+              <pre>{JSON.stringify(coAgents, null, 2)}</pre>
             </div>
           </Suspense>
         </div>
