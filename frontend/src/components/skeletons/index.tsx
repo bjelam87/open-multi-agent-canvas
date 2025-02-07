@@ -120,3 +120,37 @@ export const GenericSkeleton: FC = () => (
     </div>
   </div>
 );
+
+export const MapSkeleton: FC = () => (
+  <div className="space-y-4 w-full h-full">
+    {/* Map container */}
+    <div className="relative w-full h-[600px]">
+      <Skeleton className="h-full w-full rounded-lg" />
+
+      {/* Loading markers simulation */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="flex gap-2">
+          <Skeleton className="h-8 w-8 rounded-full animate-pulse" />
+          <Skeleton className="h-8 w-8 rounded-full animate-pulse delay-100" />
+          <Skeleton className="h-8 w-8 rounded-full animate-pulse delay-200" />
+        </div>
+      </div>
+    </div>
+
+    {/* Place list loading state */}
+    <div className="space-y-4 p-4">
+      {Array.from({ length: 3 }).map((_, idx) => (
+        <div key={idx} className="space-y-2">
+          <Skeleton className="h-6 w-48" /> {/* Place name */}
+          <Skeleton className="h-4 w-full" /> {/* Address */}
+          <Skeleton className="h-4 w-3/4" /> {/* Description */}
+          <div className="flex gap-1">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-4 w-4" /> /* Rating stars */
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);

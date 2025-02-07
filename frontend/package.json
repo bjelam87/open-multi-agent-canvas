@@ -12,6 +12,8 @@
     "@copilotkit/react-core": "1.5.15-next.8",
     "@copilotkit/react-ui": "1.5.15-next.8",
     "@copilotkit/runtime": "1.5.15-next.8",
+    "@copilotkit/shared": "1.5.15-next.8",
+    "@copilotkit/runtime-client-gql": "1.5.15-next.8",
     "@nangohq/frontend": "^0.52.5",
     "@nangohq/node": "^0.52.5",
     "@radix-ui/react-dialog": "^1.1.6",

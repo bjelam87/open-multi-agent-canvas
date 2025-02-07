@@ -1,5 +1,5 @@
 "use client";
-import { useCopilotAction } from "@copilotkit/react-core";
+import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { Icon, LatLngTuple } from "leaflet";
 import "leaflet-defaulticon-compatibility";
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css";
@@ -7,7 +7,9 @@ import "leaflet/dist/leaflet.css";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
+import * as Skeletons from "./skeletons";
 import { Marker, Popup, TileLayer } from "react-leaflet";
+import { AvailableAgents } from "./coagents-provider";
 import { Button } from "./ui/button";
 
 const customIcon = new Icon({
@@ -38,6 +40,10 @@ export default function MapComponent() {
   const [pointsFrom, setPointsFrom] = useState<Place[]>([]);
   const [center, setCenter] = useState<LatLngTuple>([0, 0]);
   const hasProcessedTrips = useRef(false);
+  const hasInProgress = useRef(false);
+  const { stop: stopTravelAgent } = useCoAgent({
+    name: AvailableAgents.TRAVEL_AGENT,
+  });
 
   useCopilotAction({
     name: "add_trips",
@@ -120,6 +126,10 @@ export default function MapComponent() {
       },
     ],
     renderAndWaitForResponse({ args, status, respond }) {
+      if (["inProgress", "executing"].includes(status)) {
+        hasInProgress.current = true;
+      }
+
       if (status == "executing") {
         const trips = args.trips;
         if (!hasProcessedTrips.current) {
@@ -131,6 +141,10 @@ export default function MapComponent() {
           }, 0);
           hasProcessedTrips.current = true;
         }
+      }
+
+      if (status === "complete") {
+        hasInProgress.current = false;
       }
 
       return (
@@ -210,6 +224,9 @@ export default function MapComponent() {
                 className="flex-1 flex items-center justify-center space-x-2 bg-green-500 hover:bg-green-600 text-white"
                 onClick={() => {
                   respond?.("SEND");
+                  setTimeout(() => {
+                    stopTravelAgent();
+                  }, 3000);
                 }}
               >
                 <CheckCircle className="h-5 w-5" />
@@ -244,6 +261,13 @@ export default function MapComponent() {
       },
     ],
     render({ args, status }) {
+      /**
+       * Dirty hack to mark the agent as in progress
+       */
+      if (!hasInProgress.current) {
+        hasInProgress.current = true;
+      }
+
       if (!args.queries) {
         return (
           <div className="flex items-center justify-center p-4">
@@ -280,6 +304,10 @@ export default function MapComponent() {
       );
     },
   });
+
+  if (hasInProgress.current) {
+    return <Skeletons.MapSkeleton />;
+  }
 
   if (!pointsFrom.length) {
     return null;
