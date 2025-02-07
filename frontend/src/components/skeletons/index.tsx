@@ -111,3 +111,12 @@ export const ChatSkeleton: FC = () => (
     <Skeleton className="h-12 w-full" />
   </div>
 );
+
+export const GenericSkeleton: FC = () => (
+  <div className="w-full h-screen animate-pulse p-4 flex flex-col items-center justify-center">
+    {/* Loading blocks */}
+    <div className="w-full h-full flex items-center justify-center">
+      <Skeleton className="h-48 w-48 bg-[url('/icon.png')] bg-center bg-no-repeat bg-contain opacity-20 rounded-lg shadow-lg animate-[fly-away_2s_ease-in-out_infinite]" />
+    </div>
+  </div>
+);

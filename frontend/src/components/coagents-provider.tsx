@@ -2,7 +2,7 @@
 import { useCoAgent } from "@copilotkit/react-core";
 import { createContext, useContext } from "react";
 
-enum AvailableAgents {
+export enum AvailableAgents {
   TRAVEL_AGENT = "travel",
   RESEARCH_AGENT = "agent",
 }
