@@ -28,10 +28,10 @@ export const ChatWindow: FC = () => {
         regenerateResponse: "Try another response",
       }}
       icons={{
-        sendIcon: <SendIcon />,
-        activityIcon: <ActivityIcon />,
-        spinnerIcon: <Loader2 />,
-        stopIcon: <Square />,
+        sendIcon: <SendIcon className="w-4 h-4" />,
+        activityIcon: <ActivityIcon className="w-4 h-4" />,
+        spinnerIcon: <Loader2 className="w-4 h-4 animate-spin" />,
+        stopIcon: <Square className="w-4 h-4" />,
         regenerateIcon: <RotateCw className="w-4 h-4" />,
       }}
     />
