@@ -18,7 +18,7 @@ const getCurrentlyRunningAgent = (
   // modify agent that is called agent to research agent
   if (agent?.name === "agent") {
     // THIS IS ONLY FOR UI PURPOSES
-    return { ...agent, name: "research agent" };
+    return { ...agent, name: "research" };
   }
   return agent;
 };
@@ -88,7 +88,7 @@ export default function Canvas() {
             <div className="h-full">
               <Agents.TravelAgent />
               <Agents.ResearchAgent />
-              <DefaultView />
+              {!currentlyRunningAgent?.status && <DefaultView />}
             </div>
           </Suspense>
         </div>

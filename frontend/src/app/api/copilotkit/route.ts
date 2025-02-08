@@ -30,6 +30,7 @@ const runtime = new CopilotRuntime({
     langGraphPlatformEndpoint({
       langsmithApiKey,
       deploymentUrl: process.env.RESEARCH_AGENT_URL as string,
+      // deploymentUrl: "http://localhost:8002",
       agents: [
         {
           // This name is important, it will be used to identify the agent in the chat window

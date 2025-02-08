@@ -24,11 +24,17 @@ export const ChatWindow: FC = () => {
         regenerateResponse: "Try another response",
       }}
       icons={{
-        sendIcon: <SendIcon className="w-4 h-4" />,
-        activityIcon: <ActivityIcon className="w-4 h-4" />,
+        sendIcon: (
+          <SendIcon className="w-4 h-4 hover:scale-110 transition-transform" />
+        ),
+        activityIcon: <ActivityIcon className="w-4 h-4 animate-pulse" />,
         spinnerIcon: <Loader2 className="w-4 h-4 animate-spin" />,
-        stopIcon: <Square className="w-4 h-4" />,
-        regenerateIcon: <RotateCw className="w-4 h-4" />,
+        stopIcon: (
+          <Square className="w-4 h-4 hover:text-red-500 transition-colors" />
+        ),
+        regenerateIcon: (
+          <RotateCw className="w-4 h-4 hover:rotate-180 transition-transform duration-300" />
+        ),
       }}
     />
   );

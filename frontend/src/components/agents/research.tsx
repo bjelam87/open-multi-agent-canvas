@@ -17,8 +17,37 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
-import { useCallback, useRef, useState } from "react";
+import {
+  useCoAgent,
+  useCoAgentStateRender,
+  useCopilotAction,
+} from "@copilotkit/react-core";
+import { useCallback, useEffect, useRef, useState } from "react";
+// import ReactMarkdown from "react-markdown";
+interface ResearchLogsProps {
+  logs: { message: string; done: boolean }[];
+}
+
+const ResearchLogs: React.FC<ResearchLogsProps> = ({ logs }) => {
+  return (
+    <div className="mt-4 bg-gray-100 p-4 rounded-md">
+      <section aria-labelledby="research-logs-title">
+        <ol className="relative border-l border-gray-200 ml-3">
+          {logs?.map((log, index) => (
+            <li key={index} className="mb-6 ml-4">
+              <div className="absolute w-3 h-3 bg-gray-200 rounded-full -left-1.5 border border-white">
+                {log.done && (
+                  <div className="w-2 h-2 bg-green-500 rounded-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+                )}
+              </div>
+              <p className="text-sm font-normal text-gray-700">{log.message}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+  );
+};
 
 function ProposalItem({
   proposalItemKey,
@@ -99,7 +128,6 @@ export function ProposalViewer({
         onCheckedChange={(checked) =>
           handleCheckboxChange(sectionType, sectionKey, checked as boolean)
         }
-        className="border border-black/10 data-[state=checked]:text-[var(--primary)]"
       />
       <div className="grid gap-1.5 leading-none">
         <label
@@ -148,14 +176,14 @@ export function ProposalViewer({
       <CardFooter className="flex justify-between">
         <Button
           onClick={() => handleSubmit(false)}
-          className="text-red-500"
+          variant="destructive"
           disabled={!reviewedProposal.remarks?.length}
         >
           Reject Proposal
         </Button>
         <Button
           onClick={() => handleSubmit(true)}
-          className="bg-[var(--primary)] text-white hover:bg-[#68330d]"
+          variant="default"
           disabled={
             !Object.values(reviewedProposal.sections).some(
               (section) => section.approved
@@ -168,6 +196,7 @@ export function ProposalViewer({
     </Card>
   );
 }
+
 export const ResearchAgent = () => {
   const {
     running: researchAgentRunning,
@@ -177,17 +206,57 @@ export const ResearchAgent = () => {
     name: AvailableAgents.RESEARCH_AGENT,
   });
 
+  const [logs, setLogs] = useState<Array<{ message: string; done: boolean }>>(
+    []
+  );
+
+  useEffect(() => {
+    if (state?.logs?.length > 0) {
+      setLogs((prev) => {
+        // Update done status for existing logs
+        // Count logs with done status
+        const doneCount = prev.filter((log) => log.done).length;
+        const shouldMarkAllDone = doneCount >= 4;
+
+        const updatedPrev = prev.map((existingLog) => {
+          const matchingNewLog = state.logs.find(
+            (newLog) => newLog.message === existingLog.message
+          );
+          return {
+            ...existingLog,
+            done: shouldMarkAllDone
+              ? true
+              : matchingNewLog?.done || existingLog.done,
+          };
+        });
+
+        // Add new unique logs
+        const newLogs = state.logs
+          .filter(
+            (newLog) =>
+              !prev.some(
+                (existingLog) => existingLog.message === newLog.message
+              )
+          )
+          .map((log) => ({
+            ...log,
+            done: shouldMarkAllDone ? true : log.done,
+          }));
+
+        return [...updatedPrev, ...newLogs];
+      });
+    }
+  }, [state?.logs]);
+
   const isResearchInProgress = useRef(false);
 
   useCopilotAction({
     name: "review_proposal",
     description:
       "Prompt the user to review structure proposal. Right after proposal generation",
-    available: "remote",
-    renderAndWaitForResponse({ args, status, respond }) {
-      console.log("status", status);
-      console.log("args", args);
-
+    // available: "remote",
+    parameters: [],
+    renderAndWaitForResponse({ status, respond }) {
       if (status === "complete") {
         isResearchInProgress.current = false;
       }
@@ -210,6 +279,16 @@ export const ResearchAgent = () => {
     },
   });
 
+  useCoAgentStateRender<ResearchAgentState>(
+    {
+      name: AvailableAgents.RESEARCH_AGENT,
+      render: () => {
+        return <ResearchLogs logs={logs} />;
+      },
+    },
+    [state]
+  );
+
   if (isResearchInProgress.current) {
     return (
       <div className="flex flex-col gap-4 h-full z-[999]">
@@ -224,10 +303,47 @@ export const ResearchAgent = () => {
   return (
     <div className="flex flex-col gap-4 h-full z-[999]">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">Research Agent</h1>
-        <pre className="bg-black/10 p-4 rounded-md">
-          {JSON.stringify(state, null, 2)}
-        </pre>
+        {state.title && (
+          <div className="prose max-w-none">
+            <h1 className="text-3xl font-bold mb-6">{state.title}</h1>
+          </div>
+        )}
+        {/* {state.outline && (
+          <div className="prose max-w-none bg-gray-50 p-4 rounded-lg">
+            <h2 className="text-xl font-semibold mb-3">Outline</h2>
+            <div className="pl-4">
+              <ReactMarkdown>{JSON.stringify(state.outline)}</ReactMarkdown>
+            </div>
+          </div>
+        )} */}
+        {state.sections?.map((section, i) => (
+          <div key={i} className="prose max-w-none">
+            <h2 className="text-2xl font-semibold mt-8 mb-4">
+              {section.title}
+            </h2>
+            <div className="text-gray-700">{section.content}</div>
+          </div>
+        ))}
+        {state.sources && (
+          <div className="prose max-w-none mt-8 pt-6 border-t">
+            <h2 className="text-xl font-semibold mb-4">Sources</h2>
+            <div className="space-y-4">
+              {Object.keys(state.sources).map((url) => (
+                <div key={url} className="text-gray-600">
+                  <a
+                    href={state.sources[url].url}
+                    className="font-medium hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {state.sources[url].title}
+                  </a>
+                  <p className="mt-1">{state.sources[url].content}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
