@@ -244,6 +244,12 @@ export default function MapComponent() {
               </Button>
             </div>
           ) : null}
+          {status === "complete" ? (
+            <div className="flex items-center justify-center">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              <span className="ml-2">Trips added Successfully!</span>
+            </div>
+          ) : null}
         </div>
       );
     },
