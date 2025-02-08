@@ -277,6 +277,7 @@ export const ResearchAgent = () => {
       }
       return <></>;
     },
+    followUp: false,
   });
 
   useCoAgentStateRender<ResearchAgentState>(
