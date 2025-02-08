@@ -7,7 +7,7 @@ import Map from "@/components/map";
 import { AvailableAgents } from "./coagents-provider";
 import { useCoAgent } from "@copilotkit/react-core";
 import { Loader2, CircleOff } from "lucide-react";
-
+import * as Agents from "@/components/agents";
 const getCurrentlyRunningAgent = (
   state: Array<{
     status: boolean;
@@ -81,7 +81,8 @@ export default function Canvas() {
         <div className="space-y-8 h-full">
           <Suspense fallback={<Skeletons.EmailListSkeleton />}>
             <div className="h-full">
-              <Map />
+              <Agents.TravelAgent />
+              <Agents.ResearchAgent />
               <DefaultView />
             </div>
           </Suspense>

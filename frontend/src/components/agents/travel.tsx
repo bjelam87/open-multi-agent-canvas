@@ -1,3 +1,5 @@
+import Map from "@/components/map";
+
 export const TravelAgent = () => {
-  return <div>TravelAgent</div>;
+  return <Map />;
 };
