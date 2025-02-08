@@ -3,7 +3,6 @@
 import { Suspense } from "react";
 import { ChatWindow } from "./chat-window";
 import * as Skeletons from "@/components/skeletons";
-import Map from "@/components/map";
 import { AvailableAgents } from "./coagents-provider";
 import { useCoAgent } from "@copilotkit/react-core";
 import { Loader2, CircleOff } from "lucide-react";
@@ -15,7 +14,13 @@ const getCurrentlyRunningAgent = (
     nodeName: string;
   }>
 ) => {
-  return state.find((agent) => agent.status);
+  const agent = state.find((agent) => agent.status);
+  // modify agent that is called agent to research agent
+  if (agent?.name === "agent") {
+    // THIS IS ONLY FOR UI PURPOSES
+    return { ...agent, name: "research agent" };
+  }
+  return agent;
 };
 
 const DefaultView = () => (
