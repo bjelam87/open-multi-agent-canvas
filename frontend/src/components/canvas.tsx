@@ -1,12 +1,13 @@
 "use client";
 
+import * as Agents from "@/components/agents";
+import * as Skeletons from "@/components/skeletons";
+import { AvailableAgents } from "@/lib/available-agents";
+import { useCoAgent } from "@copilotkit/react-core";
+import { CircleOff, Loader2 } from "lucide-react";
 import { Suspense } from "react";
 import { ChatWindow } from "./chat-window";
-import * as Skeletons from "@/components/skeletons";
-import { AvailableAgents } from "./coagents-provider";
-import { useCoAgent } from "@copilotkit/react-core";
-import { Loader2, CircleOff } from "lucide-react";
-import * as Agents from "@/components/agents";
+
 const getCurrentlyRunningAgent = (
   state: Array<{
     status: boolean;
@@ -14,13 +15,7 @@ const getCurrentlyRunningAgent = (
     nodeName: string;
   }>
 ) => {
-  const agent = state.find((agent) => agent.status);
-  // modify agent that is called agent to research agent
-  if (agent?.name === "agent") {
-    // THIS IS ONLY FOR UI PURPOSES
-    return { ...agent, name: "research" };
-  }
-  return agent;
+  return state.find((agent) => agent.status);
 };
 
 const DefaultView = () => (
@@ -42,9 +37,9 @@ export default function Canvas() {
   });
 
   const {
-    running: researchAgentRunning,
-    name: researchAgentName,
-    nodeName: researchAgentNodeName,
+    running: aiResearchAgentRunning,
+    name: aiResearchAgentName,
+    nodeName: aiResearchAgentNodeName,
   } = useCoAgent({
     name: AvailableAgents.RESEARCH_AGENT,
   });
@@ -56,9 +51,9 @@ export default function Canvas() {
       nodeName: travelAgentNodeName ?? "",
     },
     {
-      status: researchAgentRunning,
-      name: researchAgentName,
-      nodeName: researchAgentNodeName ?? "",
+      status: aiResearchAgentRunning,
+      name: aiResearchAgentName,
+      nodeName: aiResearchAgentNodeName ?? "",
     },
   ]);
 
@@ -87,7 +82,7 @@ export default function Canvas() {
           <Suspense fallback={<Skeletons.EmailListSkeleton />}>
             <div className="h-full">
               <Agents.TravelAgent />
-              <Agents.ResearchAgent />
+              <Agents.AIResearchAgent />
               {!currentlyRunningAgent?.status && <DefaultView />}
             </div>
           </Suspense>

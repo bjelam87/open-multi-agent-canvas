@@ -3,9 +3,8 @@ import {
   OpenAIAdapter,
   copilotRuntimeNextJSAppRouterEndpoint,
   langGraphPlatformEndpoint,
-  // copilotKitEndpoint,
 } from "@copilotkit/runtime";
-
+import { AvailableAgents } from "@/lib/available-agents";
 const langsmithApiKey = (process.env.LANGSMITH_API_KEY as string) || "";
 
 import { NextRequest } from "next/server";
@@ -14,27 +13,23 @@ const serviceAdapter = new OpenAIAdapter();
 
 const runtime = new CopilotRuntime({
   remoteEndpoints: [
-    // copilotKitEndpoint({
-    //   url: process.env.COPILOTKIT_END_POINT_URL as string,
-    // }),
     langGraphPlatformEndpoint({
       deploymentUrl: process.env.TRAVEL_AGENT_URL as string,
       langsmithApiKey,
       agents: [
         {
-          name: "travel",
+          name: AvailableAgents.TRAVEL_AGENT,
           description: "This agent helps the user plan and manage their trips",
         },
       ],
     }),
     langGraphPlatformEndpoint({
-      langsmithApiKey,
       deploymentUrl: process.env.RESEARCH_AGENT_URL as string,
+      langsmithApiKey,
       agents: [
         {
-          // This name is important, it will be used to identify the agent in the chat window
-          name: "agent",
-          description: "Research assistant",
+          name: AvailableAgents.RESEARCH_AGENT,
+          description: "Research agent for the user to find information",
         },
       ],
     }),

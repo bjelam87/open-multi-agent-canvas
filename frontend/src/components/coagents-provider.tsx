@@ -1,12 +1,7 @@
 "use client";
 import { useCoAgent } from "@copilotkit/react-core";
 import { createContext, useContext } from "react";
-
-export enum AvailableAgents {
-  TRAVEL_AGENT = "travel",
-  RESEARCH_AGENT = "agent",
-  AI_RESEARCH_AGENT = "ai_researcher",
-}
+import { AvailableAgents } from "@/lib/available-agents";
 
 /**
  * Base Agent State
@@ -104,6 +99,16 @@ export type ResearchAgentState = BaseAgentState & {
   logs: Log[];
 };
 
+// AI Research Agent Types
+export type AIResearchAgentState = BaseAgentState & {
+  model: string;
+  steps: any[];
+  answer: {
+    markdown: string;
+    references: any[];
+  };
+};
+
 export const AgentsContext = createContext<
   Array<TravelAgentState | ResearchAgentState>
 >([]);
@@ -120,8 +125,15 @@ export const CoAgentsProvider = ({
     name: AvailableAgents.TRAVEL_AGENT,
   });
 
-  const { state: researchAgentState } = useCoAgent({
+  const { state: aiResearchAgentState } = useCoAgent({
     name: AvailableAgents.RESEARCH_AGENT,
+    initialState: {
+      model: "openai",
+      research_question: "",
+      resources: [],
+      report: "",
+      logs: [],
+    },
   });
 
   return (
@@ -132,7 +144,7 @@ export const CoAgentsProvider = ({
           __name__: AvailableAgents.TRAVEL_AGENT,
         },
         {
-          ...researchAgentState,
+          ...aiResearchAgentState,
           __name__: AvailableAgents.RESEARCH_AGENT,
         },
       ]}

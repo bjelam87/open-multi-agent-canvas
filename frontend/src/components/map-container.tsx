@@ -1,4 +1,7 @@
 "use client";
+import * as Skeletons from "@/components/skeletons";
+import { Button } from "@/components/ui/button";
+import { AvailableAgents } from "@/lib/available-agents";
 import { useCoAgent, useCopilotAction } from "@copilotkit/react-core";
 import { Icon, LatLngTuple } from "leaflet";
 import "leaflet-defaulticon-compatibility";
@@ -7,10 +10,7 @@ import "leaflet/dist/leaflet.css";
 import { CheckCircle, Loader2, XCircle } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
-import * as Skeletons from "./skeletons";
 import { Marker, Popup, TileLayer } from "react-leaflet";
-import { AvailableAgents } from "./coagents-provider";
-import { Button } from "./ui/button";
 
 const customIcon = new Icon({
   iconUrl: "/icon.png",
