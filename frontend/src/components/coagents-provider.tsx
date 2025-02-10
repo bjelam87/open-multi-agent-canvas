@@ -5,6 +5,7 @@ import { createContext, useContext } from "react";
 export enum AvailableAgents {
   TRAVEL_AGENT = "travel",
   RESEARCH_AGENT = "agent",
+  AI_RESEARCH_AGENT = "ai_researcher",
 }
 
 /**

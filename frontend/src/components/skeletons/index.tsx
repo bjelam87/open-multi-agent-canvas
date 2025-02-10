@@ -42,32 +42,18 @@ export const EmailListSkeleton: FC = () => (
 );
 
 export const ResearchPaperSkeleton: FC = () => (
-  <div className="space-y-8">
+  <div className="space-y-8 mt-14">
     {/* Title */}
-    <Skeleton className="h-10 w-3/4" />
-
-    {/* Author section */}
-    <div className="space-y-2">
-      <Skeleton className="h-4 w-1/3" />
-      <Skeleton className="h-4 w-1/4" />
+    <div className="prose max-w-none">
+      <Skeleton className="h-10 w-3/4" />
     </div>
 
-    {/* Abstract section */}
-    <div className="space-y-2">
-      <Skeleton className="h-5 w-32" />
-      <div className="space-y-1.5">
-        {Array.from({ length: 4 }).map((_, idx) => (
-          <Skeleton key={idx} className="h-4 w-full" />
-        ))}
-      </div>
-    </div>
-
-    {/* Content section */}
+    {/* Sections */}
     <div className="space-y-6">
       {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="space-y-2">
-          <Skeleton className="h-6 w-1/3" />
-          <div className="space-y-1.5">
+        <div key={i} className="prose max-w-none">
+          <Skeleton className="h-8 w-1/3 mb-4" /> {/* Section title */}
+          <div className="space-y-2">
             {Array.from({ length: 4 }).map((_, idx) => (
               <Skeleton key={idx} className="h-4 w-full" />
             ))}
@@ -76,12 +62,17 @@ export const ResearchPaperSkeleton: FC = () => (
       ))}
     </div>
 
-    {/* Source/References */}
-    <div className="space-y-2">
-      <Skeleton className="h-5 w-32" />
-      {Array.from({ length: 3 }).map((_, idx) => (
-        <Skeleton key={idx} className="h-4 w-2/3" />
-      ))}
+    {/* Sources */}
+    <div className="prose max-w-none mt-8 pt-6 border-t">
+      <Skeleton className="h-6 w-32 mb-4" /> {/* Sources title */}
+      <div className="space-y-4">
+        {Array.from({ length: 3 }).map((_, idx) => (
+          <div key={idx} className="space-y-2">
+            <Skeleton className="h-4 w-2/3" /> {/* Source title */}
+            <Skeleton className="h-4 w-full" /> {/* Source content */}
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 );
@@ -124,11 +115,14 @@ export const GenericSkeleton: FC = () => (
 export const MapSkeleton: FC = () => (
   <div className="w-full h-full relative">
     <Skeleton className="h-full w-full rounded-lg" />
-    
+
     {/* Map tiles simulation */}
     <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-1 p-2">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="bg-gray-300/30 rounded border border-gray-400/20" />
+        <div
+          key={i}
+          className="bg-gray-300/30 rounded border border-gray-400/20"
+        />
       ))}
     </div>
 

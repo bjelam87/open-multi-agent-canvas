@@ -5,7 +5,6 @@ import {
   ProposalSectionName,
   ResearchAgentState,
 } from "@/components/coagents-provider";
-import { ResearchPaperSkeleton } from "@/components/skeletons";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +21,10 @@ import {
   useCoAgentStateRender,
   useCopilotAction,
 } from "@copilotkit/react-core";
+import { CheckCircleIcon } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ResearchPaperSkeleton } from "../skeletons";
 // import ReactMarkdown from "react-markdown";
 interface ResearchLogsProps {
   logs: { message: string; done: boolean }[];
@@ -108,6 +110,7 @@ export function ProposalViewer({
 
   const handleSubmit = useCallback(
     (approved: boolean) => {
+      console.log("submitted", approved, reviewedProposal);
       onSubmit(approved, reviewedProposal);
     },
     [onSubmit, reviewedProposal]
@@ -202,6 +205,7 @@ export const ResearchAgent = () => {
     running: researchAgentRunning,
     nodeName: researchAgentNodeName,
     state,
+    stop: stopResearchAgent,
   } = useCoAgent<ResearchAgentState>({
     name: AvailableAgents.RESEARCH_AGENT,
   });
@@ -250,45 +254,84 @@ export const ResearchAgent = () => {
 
   const isResearchInProgress = useRef(false);
 
+  useCoAgentStateRender<ResearchAgentState>(
+    {
+      name: AvailableAgents.RESEARCH_AGENT,
+      render: ({ status }) => {
+        isResearchInProgress.current = status === "inProgress";
+        return <ResearchLogs logs={logs} />;
+      },
+    },
+    [state]
+  );
+
   useCopilotAction({
     name: "review_proposal",
     description:
       "Prompt the user to review structure proposal. Right after proposal generation",
     // available: "remote",
     parameters: [],
-    renderAndWaitForResponse({ status, respond }) {
-      if (status === "complete") {
-        isResearchInProgress.current = false;
-      }
+    // @ts-ignore
+    // renderAndWaitForResponse: ({ respond, status }) => {
+    //   console.log("Action status:", status); // Track status changes
 
-      if (status !== "complete") {
-        isResearchInProgress.current = true;
-        return (
-          <ProposalViewer
-            proposal={state?.proposal}
-            onSubmit={(approved, proposal) =>
-              respond?.({
-                ...proposal,
-                approved,
-              })
-            }
-          />
-        );
+    //   if (status !== "complete") {
+    //     return (
+    //       <ProposalViewer
+    //         proposal={state?.proposal}
+    //         onSubmit={(approved, proposal) => {
+    //           console.log("Submitting proposal:", { approved, proposal }); // Log what's being sent
+    //           respond?.({
+    //             ...proposal,
+    //             approved,
+    //           });
+    //           console.log("Proposal submitted"); // Confirm respond was called
+    //         }}
+    //       />
+    //     );
+    //   }
+    //   console.log("Returning null - complete"); // Track completion
+    //   return null;
+    // },
+    renderAndWaitForResponse({ status, respond }) {
+      switch (status) {
+        case "executing":
+          isResearchInProgress.current = true;
+          return (
+            <ProposalViewer
+              proposal={state?.proposal}
+              onSubmit={(approved, proposal) =>
+                respond?.({ ...proposal, approved })
+              }
+            />
+          );
+        case "complete":
+          /**
+           * This is temorary hack to stop the agent after it completes what it needs to do
+           * TODO: Right way to do this is https://docs.copilotkit.ai/reference/sdk/js/LangGraph#copilotkitexit
+           */
+          setTimeout(() => {
+            isResearchInProgress.current = false;
+          }, 1000);
+          return (
+            <div className="flex items-center gap-2 text-green-600 font-medium">
+              <CheckCircleIcon className="w-5 h-5" />
+              Research completed
+            </div>
+          );
+        case "inProgress":
+          isResearchInProgress.current = true;
+          return (
+            <div className="flex items-center gap-2 text-green-600 font-medium">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Completing research...
+            </div>
+          );
       }
-      return <></>;
     },
+    available: "enabled",
     followUp: false,
   });
-
-  useCoAgentStateRender<ResearchAgentState>(
-    {
-      name: AvailableAgents.RESEARCH_AGENT,
-      render: () => {
-        return <ResearchLogs logs={logs} />;
-      },
-    },
-    [state]
-  );
 
   if (isResearchInProgress.current) {
     return (
@@ -297,28 +340,24 @@ export const ResearchAgent = () => {
       </div>
     );
   }
-  if (!researchAgentRunning || !researchAgentNodeName) {
+  if (!researchAgentRunning && !researchAgentNodeName) {
     return null;
   }
 
   return (
     <div className="flex flex-col gap-4 h-full z-[999]">
       <div className="flex flex-col gap-2">
-        {state.title && (
-          <div className="prose max-w-none">
-            <h1 className="text-3xl font-bold mb-6">{state.title}</h1>
+        <pre>{researchAgentNodeName}</pre>
+        {/* {state.title && (
+          <div className="prose max-w-none h-[100px] flex items-center">
+            <h1 className="text-3xl font-bold">{state.title}</h1>
           </div>
         )}
-        {/* {state.outline && (
-          <div className="prose max-w-none bg-gray-50 p-4 rounded-lg">
-            <h2 className="text-xl font-semibold mb-3">Outline</h2>
-            <div className="pl-4">
-              <ReactMarkdown>{JSON.stringify(state.outline)}</ReactMarkdown>
-            </div>
-          </div>
-        )} */}
         {state.sections?.map((section, i) => (
-          <div key={i} className="prose max-w-none">
+          <div
+            key={i}
+            className="prose max-w-none flex-1 overflow-y-auto max-h-[500px]"
+          >
             <h2 className="text-2xl font-semibold mt-8 mb-4">
               {section.title}
             </h2>
@@ -326,25 +365,38 @@ export const ResearchAgent = () => {
           </div>
         ))}
         {state.sources && (
-          <div className="prose max-w-none mt-8 pt-6 border-t">
-            <h2 className="text-xl font-semibold mb-4">Sources</h2>
-            <div className="space-y-4">
-              {Object.keys(state.sources).map((url) => (
-                <div key={url} className="text-gray-600">
-                  <a
-                    href={state.sources[url].url}
-                    className="font-medium hover:underline"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    {state.sources[url].title}
-                  </a>
-                  <p className="mt-1">{state.sources[url].content}</p>
+          <div className="prose max-w-none mt-12 pt-8 border-t h-[400px] flex flex-col">
+            <h2 className="text-2xl font-semibold mb-6">References</h2>
+            <div className="space-y-6 flex-1 overflow-y-auto pr-4 border-2 border-gray-100 rounded-lg shadow-inner bg-gray-50">
+              <div className="sticky top-0 bg-gray-50 p-2 text-sm text-gray-500 border-b text-center">
+                Scroll to see more references
+              </div>
+              {Object.entries(state.sources).map(([url, source], index) => (
+                <div key={url} className="flex gap-4 px-4">
+                  <span className="text-gray-500 font-mono">[{index + 1}]</span>
+                  <div className="flex-1">
+                    <div className="flex items-baseline justify-between">
+                      <a
+                        href={source.url}
+                        className="text-blue-600 hover:text-blue-800 font-medium"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {source.title}
+                      </a>
+                      <span className="text-sm text-gray-500">
+                        {new URL(source.url).hostname}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+                      {source.content}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

@@ -16,9 +16,8 @@ export const ChatWindow: FC = () => {
       className="h-full flex flex-col"
       instructions="You are a multi-agent chat system with specialized agents:
           - Travel Agent: Expert in planning trips, itineraries and travel recommendations
-          - Research Agent: Specialized in conducting thorough research on any topic
-          - Email Agent: Assists with drafting and composing professional emails
-          Please identify which agent would be most helpful for the user's request and respond accordingly."
+          - Research Agent: You are a helpful research assistant, set to help the user with conduction and writing a research paper on any topic.
+          - Email Agent: Assists with drafting and composing professional emails"
       labels={{
         placeholder: "Type your message here...",
         regenerateResponse: "Try another response",
