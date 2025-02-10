@@ -1,10 +1,11 @@
+import { Log } from "@/components/coagents-provider";
+import { ResearchLogs } from "@/components/research-logs";
+import { ResearchPaperSkeleton } from "@/components/skeletons";
 import { AvailableAgents } from "@/lib/available-agents";
 import { useCoAgent, useCoAgentStateRender } from "@copilotkit/react-core";
+import { CheckCircleIcon } from "lucide-react";
 import { FC, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { ResearchPaperSkeleton } from "@/components/skeletons";
-import { ResearchLogs } from "@/components/research-logs";
-import { CheckCircleIcon } from "lucide-react";
 
 export type Resource = {
   url: string;
@@ -16,8 +17,8 @@ export type ResearchAgentState = {
   model: string;
   research_question: string;
   report: string;
-  resources: any[];
-  logs: any[];
+  resources: Resource[];
+  logs: Log[];
 };
 
 export const AIResearchAgent: FC = () => {
@@ -42,6 +43,28 @@ export const AIResearchAgent: FC = () => {
       },
     });
 
+  useEffect(() => {
+    if (researchAgentState.logs) {
+      setLogs((prevLogs) => {
+        const newLogs = [...prevLogs];
+        researchAgentState.logs.forEach((log) => {
+          const existingLogIndex = newLogs.findIndex(
+            (l) => l.message === log.message
+          );
+          if (existingLogIndex >= 0) {
+            // Only update done status if changing from false to true
+            if (log.done && !newLogs[existingLogIndex].done) {
+              newLogs[existingLogIndex].done = true;
+            }
+          } else {
+            newLogs.push(log);
+          }
+        });
+        return newLogs;
+      });
+    }
+  }, [researchAgentState.logs]);
+
   useCoAgentStateRender({
     name: AvailableAgents.RESEARCH_AGENT,
     handler: ({ nodeName }) => {
@@ -55,7 +78,7 @@ export const AIResearchAgent: FC = () => {
     render: ({ status }) => {
       if (status === "inProgress") {
         isResearchInProgress.current = true;
-        return <ResearchLogs logs={researchAgentState.logs ?? []} />;
+        return <ResearchLogs logs={logs ?? []} />;
       }
 
       if (status === "complete") {
@@ -90,7 +113,7 @@ export const AIResearchAgent: FC = () => {
     <div className="flex flex-col gap-4 h-full z-[999]">
       <div className="flex flex-col gap-2 p-6 bg-white rounded-lg shadow-sm">
         <ReactMarkdown
-          className="prose prose-sm md:prose-base lg:prose-lg prose-slate max-w-none"
+          className="prose prose-sm md:prose-base lg:prose-lg prose-slate max-w-none bg-gray-50 p-6 rounded-lg border border-gray-200"
           components={{
             h1: ({ children }) => (
               <h1 className="text-3xl font-bold mb-6 pb-2 border-b">

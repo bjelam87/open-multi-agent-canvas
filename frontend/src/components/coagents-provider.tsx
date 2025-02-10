@@ -2,6 +2,7 @@
 import { useCoAgent } from "@copilotkit/react-core";
 import { createContext, useContext } from "react";
 import { AvailableAgents } from "@/lib/available-agents";
+import { ResearchAgentState } from "./agents/researcher";
 
 /**
  * Base Agent State
@@ -67,47 +68,6 @@ export interface Log {
   message: string;
   done: boolean;
 }
-
-export interface ProposalSection {
-  title: string;
-  description: string;
-  approved: boolean;
-}
-
-export enum ProposalSectionName {
-  Sections = "sections",
-}
-
-export type IProposalItem = Record<string, ProposalSection>;
-
-export interface Proposal {
-  [ProposalSectionName.Sections]: IProposalItem;
-  timestamp: string;
-  approved: boolean;
-  remarks?: string;
-}
-
-export type ResearchAgentState = BaseAgentState & {
-  title: string;
-  outline: Record<string, unknown>;
-  proposal: Proposal;
-  // structure: Record<string, unknown>;
-  sections: Section[]; // Array of objects with 'title', 'content', and 'idx'
-  sources: Sources; // Dictionary with string keys and nested dictionaries
-  tool: string;
-  messages: { [key: string]: unknown }[]; // Array of AnyMessage objects with potential additional properties
-  logs: Log[];
-};
-
-// AI Research Agent Types
-export type AIResearchAgentState = BaseAgentState & {
-  model: string;
-  steps: any[];
-  answer: {
-    markdown: string;
-    references: any[];
-  };
-};
 
 export const AgentsContext = createContext<
   Array<TravelAgentState | ResearchAgentState>
