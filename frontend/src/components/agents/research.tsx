@@ -329,7 +329,7 @@ export const ResearchAgent = () => {
           );
       }
     },
-    available: "enabled",
+    available: "remote",
     followUp: false,
   });
 
