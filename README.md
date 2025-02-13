@@ -1,6 +1,6 @@
 # Open Multi-Agent Canvas
 
-Open Multi-Agent Canvas is an open-source multi-agent chat interface that leverages specialized agents to assist with travel planning, research, email drafting, and more. Built with Next.js, React, and CopilotKit, this project offers an interactive, unified experience by managing multiple agents within one dynamic conversation.
+Open Multi-Agent Canvas is an open-source multi-agent chat interface that leverages agents to assist with travel planning, research. Built with Next.js, React, and CopilotKit, this project offers an interactive, unified experience by managing multiple agents within one dynamic conversation.
 
 ## Key Features
 
@@ -9,7 +9,6 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that levera
   - **Travel Agent:** Plan trips, create itineraries, and view travel recommendations on an interactive map powered by Leaflet.
   - **Research Agent:** Conduct research with real-time logs and progress updates.
   - **Email Agent:** Draft and compose professional emails seamlessly.
-  
 - **Real-Time Interactivity:**  
   Enjoy a live chat powered by `@copilotkit/react-ui` that orchestrates dynamic state changes and agent responses.
 
@@ -29,29 +28,27 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that levera
 
 ## Setup Instructions
 
-1. **Prerequisites:**  
+1. **Prerequisites:**
+
    - [Node.js](https://nodejs.org) (LTS version recommended)
    - npm or yarn
 
-2. **Installation:**  
+2. **Installation:**
+
    ```bash
    # Clone the repository
    git clone <repository-url>
-   
+
    # Navigate to the frontend directory
    cd frontend
 
    # Install dependencies
-   npm install
-   # or
-   yarn install
+   pnpm install
    ```
 
-3. **Running the Development Server:**  
+3. **Running the Development Server:**
    ```bash
-   npm run dev
-   # or
-   yarn dev
+   pnpm dev
    ```
    Then, open [http://localhost:3000](http://localhost:3000) in your browser.
 
@@ -69,18 +66,16 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that levera
 - **/lib:**  
   Contains utility functions and configuration files (like available agents configuration).
 
-## Value Proposition
+## Langgraph Agents
 
-Open Multi-Agent Canvas simplifies complex tasks by unifying multiple specialized agents in a single, interactive chat interface. Whether you're planning a trip with an interactive map, conducting in-depth research with real-time logs, or composing professional emails, this application streamlines your workflow and provides focused assistance tailored to each task—all within one platform.
+This project assumes you have working langgraph agents for the travel and research agents. If not, you can use the following links to deploy your own:
 
-## Deployment
+- [Travel Agent](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel)
+- [Research Agent](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-ai-researcher)
 
-The easiest way to deploy this project is with [Vercel](https://vercel.com). Build and start your application with:
-```bash
-npm run build
-npm run start
-```
-Follow Vercel's deployment guide for more details if needed.
+## CopilotKit Cloud
+
+This project uses CopilotKit Cloud to manage the agents and Copilot Runtime. If you don't have a CopilotKit Cloud account, you can sign up [here](https://cloud.copilotkit.ai/sign-up).
 
 ## Contributing
 
