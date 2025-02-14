@@ -29,7 +29,12 @@ Running locally, you'll need the following API keys:
    pnpm install
    ```
 
-3. **Build the project and run the server:**
+3. Create a `.env` file
+   ```bash
+      NEXT_PUBLIC_COPILOT_CLOUD_API_KEY=<YOUR COPILOT CLOUD KEY>
+   ```
+
+5. **Build the project and run the server:**
    ```bash
    pnpm run build
    pnpm run start
