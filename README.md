@@ -16,31 +16,49 @@ Running locally, you'll need the following API keys:
 - [LangSmith](https://docs.smith.langchain.com/administration/how_to_guides/organization_management/create_account_api_key)
 - [Copilot Cloud](https://cloud.copilotkit.ai)
 
-2. **Installation:**
 
-   ```bash
-   # Clone the repository
-   git clone https://github.com/CopilotKit/open-multi-agent-canvas
+## Running the Agent
 
-   # Navigate to the frontend directory
-   cd frontend
+This agent is already hosted in the LangGraph Platform. However, if you'd like to run it
+yourself first, install the dependencies:
 
-   # Install dependencies
-   pnpm install
-   ```
+```sh
+cd agent
+poetry install
+```
 
-3. Create a `.env` file
-   ```bash
-      NEXT_PUBLIC_COPILOT_CLOUD_API_KEY=<YOUR COPILOT CLOUD KEY>
-   ```
+IMPORTANT:
+Make sure the OpenAI API Key you provide, supports gpt-4o.
 
-5. **Build the project and run the server:**
-   ```bash
-   pnpm run build
-   pnpm run start
-   ```
-   
-   Then, open [http://localhost:3000](http://localhost:3000) in your browser.
+Then, run the demo:
+
+```sh
+poetry run demo
+```
+
+## Running the UI
+
+First, install the dependencies:
+
+```sh
+cd ./ui
+pnpm i
+```
+
+Then, create a `.env` file inside `./ui` with the following:
+
+```
+OPENAI_API_KEY=...
+NEXT_PUBLIC_CPK_PUBLIC_API_KEY=...
+```
+
+If you need a CopilotKit API key, you can get one [here](https://cloud.copilotkit.ai)
+
+Then, run the Next.js project:
+
+```sh
+pnpm run dev
+```
 
 ## Documentation 📚
 - [CopilotKit Docs](https://docs.copilotkit.ai/coagents)
