@@ -1,5 +1,7 @@
 # Open Multi-Agent Canvas
 
+![multi-agent-canvas](https://github.com/user-attachments/assets/5953a5a6-5686-4722-9477-5279b67b3dba)
+
 Open Multi-Agent Canvas is an open-source multi-agent chat interface that leverages agents to assist with travel planning and research. Built with Next.js LangGraph, and CopilotKit, this project offers an interactive, unified experience by managing multiple agents within one dynamic conversation.
 
 ## Quick Start 🚀
