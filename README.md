@@ -6,9 +6,14 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that lets y
 
 ## Existing Agents
 
-Check out these awesome agents (they live in separate repos). You can run them separately or deploy on LangSmith:
+Check out these awesome agents (they live in separate repos). You can run them separately or deploy them on LangSmith:
 - [CoAgents Travel Agent](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-travel/agent)
 - [CoAgents AI Researcher](https://github.com/CopilotKit/CopilotKit/tree/main/examples/coagents-ai-researcher/agent)
+
+## Copilot Cloud is required to run this project: 
+
+Add 2 new remote endpoints, one for each agent.
+![CleanShot 2025-02-20 at 14 16 42@2x](https://github.com/user-attachments/assets/da415736-c862-481f-b9c2-2ca63297ac5d)
 
 ## Quick Start 🚀
 
