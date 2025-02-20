@@ -8,7 +8,6 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that levera
   Chat with a range of specialized agents:
   - **Travel Agent:** Plan trips, create itineraries, and view travel recommendations on an interactive map powered by Leaflet.
   - **Research Agent:** Conduct research with real-time logs and progress updates.
-  - **Email Agent:** Draft and compose professional emails seamlessly.
   
 - **Real-Time Interactivity:**  
   Enjoy a live chat powered by `@copilotkit/react-ui` that orchestrates dynamic state changes and agent responses.
@@ -71,7 +70,7 @@ Open Multi-Agent Canvas is an open-source multi-agent chat interface that levera
 
 ## Value Proposition
 
-Open Multi-Agent Canvas simplifies complex tasks by unifying multiple specialized agents in a single, interactive chat interface. Whether you're planning a trip with an interactive map, conducting in-depth research with real-time logs, or composing professional emails, this application streamlines your workflow and provides focused assistance tailored to each task—all within one platform.
+Open Multi-Agent Canvas simplifies complex tasks by unifying multiple specialized agents in a single, interactive chat interface. Whether you're planning a trip with an interactive map, conducting in-depth research with real-time logs, this application streamlines your workflow and provides focused assistance tailored to each task—all within one platform.
 
 ## Deployment
 
