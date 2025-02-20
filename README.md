@@ -1,4 +1,4 @@
-# Open Multi-Agent Canvas!
+# Open Multi-Agent Canvas
 
 ![multi-agent-canvas](https://github.com/user-attachments/assets/5953a5a6-5686-4722-9477-5279b67b3dba)
 
