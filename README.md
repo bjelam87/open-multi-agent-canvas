@@ -55,17 +55,13 @@ pnpm run dev
 
 The MCP Agent allows you to connect to various MCP-compatible servers:
 
-1. **Using Built-in MCP Server**:
-   - The agent includes a built-in math server by default
-   - Access it by selecting the MCP Agent in the chat interface
-
-2. **Configuring Custom MCP Servers**:
+1. **Configuring Custom MCP Servers**:
    - Click the "MCP Servers" button in the top right of the interface
    - Add servers via the configuration panel:
      - **Standard IO**: Run commands locally (e.g., Python scripts)
      - **SSE**: Connect to external MCP-compatible servers (via Server-Sent Events)
 
-3. **Public MCP Servers**:
+2. **Public MCP Servers**:
    - You can connect to public MCP servers like [mcp.composio.dev](https://mcp.composio.dev/) and [mcp.run](https://www.mcp.run/)
 
 ## Running the MCP Agent Backend (Optional)
