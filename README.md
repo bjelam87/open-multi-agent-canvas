@@ -51,7 +51,7 @@ pnpm run dev
 
 ## MCP Agent Setup
 
-![mcp-demo](./demo/mcp-demo.gif)
+![mcp-demo](./agent/demo/mcp-demo.gif)
 
 The MCP Agent allows you to connect to various MCP-compatible servers:
 
