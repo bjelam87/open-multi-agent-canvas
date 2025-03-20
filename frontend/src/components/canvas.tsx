@@ -4,9 +4,10 @@ import * as Agents from "@/components/agents";
 import * as Skeletons from "@/components/skeletons";
 import { AvailableAgents } from "@/lib/available-agents";
 import { useCoAgent } from "@copilotkit/react-core";
-import { CircleOff, Loader2 } from "lucide-react";
-import { Suspense } from "react";
+import { CircleOff, Loader2, Settings } from "lucide-react";
+import { Suspense, useState } from "react";
 import { ChatWindow } from "./chat-window";
+import { MCPConfigModal } from "./mcp-config-modal";
 
 const getCurrentlyRunningAgent = (
   state: Array<{
@@ -22,12 +23,14 @@ const DefaultView = () => (
   <div className="flex items-center justify-center h-full text-gray-600">
     <p className="text-2xl text-center font-serif italic max-w-3xl">
       No agent running. Start a conversation in the chat to begin planning your
-      trip, researching topics!
+      trip, researching topics, or use the general-purpose agent for other tasks!
     </p>
   </div>
 );
 
 export default function Canvas() {
+  const [showMCPConfigModal, setShowMCPConfigModal] = useState(false);
+
   const {
     running: travelAgentRunning,
     name: travelAgentName,
@@ -44,6 +47,14 @@ export default function Canvas() {
     name: AvailableAgents.RESEARCH_AGENT,
   });
 
+  const {
+    running: mcpAgentRunning,
+    name: mcpAgentName,
+    nodeName: mcpAgentNodeName,
+  } = useCoAgent({
+    name: AvailableAgents.MCP_AGENT,
+  });
+
   const currentlyRunningAgent = getCurrentlyRunningAgent([
     {
       status: travelAgentRunning,
@@ -54,6 +65,11 @@ export default function Canvas() {
       status: aiResearchAgentRunning,
       name: aiResearchAgentName,
       nodeName: aiResearchAgentNodeName ?? "",
+    },
+    {
+      status: mcpAgentRunning,
+      name: mcpAgentName,
+      nodeName: mcpAgentNodeName ?? "",
     },
   ]);
 
@@ -68,9 +84,19 @@ export default function Canvas() {
           </span>{" "}
         </div>
       ) : (
-        <div className="absolute top-4 right-4 bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg z-[9999]">
-          <CircleOff className="inline-block w-4 h-4 mr-2 animate-spin" />
-          <span className="font-bold">No Agent Running</span>
+        <div className="absolute top-4 right-4 flex gap-2 z-[9999]">
+          <button 
+            onClick={() => setShowMCPConfigModal(true)}
+            className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg flex items-center gap-2"
+          >
+            <Settings className="w-4 h-4" />
+            <span className="font-medium">MCP Servers</span>
+          </button>
+
+          <div className="bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg">
+            <CircleOff className="inline-block w-4 h-4 mr-2 animate-spin" />
+            <span className="font-bold">No Agent Running</span>
+          </div>
         </div>
       )}
       <div className="order-last md:order-first md:col-span-4 p-4 border-r h-screen overflow-y-auto">
@@ -83,11 +109,18 @@ export default function Canvas() {
             <div className="h-full">
               <Agents.TravelAgent />
               <Agents.AIResearchAgent />
+              <Agents.MCPAgent />
               {!currentlyRunningAgent?.status && <DefaultView />}
             </div>
           </Suspense>
         </div>
       </div>
+
+      {/* MCP Config Modal */}
+      <MCPConfigModal 
+        isOpen={showMCPConfigModal}
+        onClose={() => setShowMCPConfigModal(false)}
+      />
     </div>
   );
 }
