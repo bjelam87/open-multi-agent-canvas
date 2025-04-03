@@ -1,8 +1,11 @@
 "use client";
 import { useCoAgent } from "@copilotkit/react-core";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useRef } from "react";
 import { AvailableAgents } from "@/lib/available-agents";
 import { ResearchAgentState } from "./agents/researcher";
+import { MCPAgentState } from "./agents/mcp-agent";
+import { MCP_STORAGE_KEY, ServerConfig } from "@/lib/mcp-config-types";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 
 /**
  * Base Agent State
@@ -70,7 +73,7 @@ export interface Log {
 }
 
 export const AgentsContext = createContext<
-  Array<TravelAgentState | ResearchAgentState>
+  Array<TravelAgentState | ResearchAgentState | MCPAgentState>
 >([]);
 
 /**
@@ -81,6 +84,17 @@ export const CoAgentsProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  // Use ref to avoid re-rendering issues
+  const configsRef = useRef<Record<string, ServerConfig>>({});
+  
+  // Get saved MCP configurations from localStorage
+  const [savedConfigs] = useLocalStorage<Record<string, ServerConfig>>(MCP_STORAGE_KEY, {});
+  
+  // Set the ref value once we have the saved configs
+  if (Object.keys(savedConfigs).length > 0 && Object.keys(configsRef.current).length === 0) {
+    configsRef.current = savedConfigs;
+  }
+
   const { state: travelAgentState } = useCoAgent({
     name: AvailableAgents.TRAVEL_AGENT,
   });
@@ -96,6 +110,15 @@ export const CoAgentsProvider = ({
     },
   });
 
+  const { state: mcpAgentState } = useCoAgent({
+    name: AvailableAgents.MCP_AGENT,
+    initialState: {
+      response: "",
+      logs: [],
+      mcp_config: configsRef.current,
+    },
+  });
+
   return (
     <AgentsContext.Provider
       value={[
@@ -106,6 +129,10 @@ export const CoAgentsProvider = ({
         {
           ...aiResearchAgentState,
           __name__: AvailableAgents.RESEARCH_AGENT,
+        },
+        {
+          ...mcpAgentState,
+          __name__: AvailableAgents.MCP_AGENT,
         },
       ]}
     >
