@@ -14,7 +14,8 @@ export const ChatWindow: FC = () => {
   return (
     <CopilotChat
       className="h-full flex flex-col"
-      instructions="Always choose MCP agent: mcp-agent. It can do many tasks other than travel or research. For those choose travel or research agent or AI Research Agent based on the query. "
+      instructions="Always choose MCP agent: mcp-agent. It can do many tasks other than travel or research. 
+      For those choose travel or research use that agent or AI Research Agent based on the query. "
       labels={{
         placeholder: "Type your message here...",
         regenerateResponse: "Try another response",

@@ -22,8 +22,11 @@ const getCurrentlyRunningAgent = (
 const DefaultView = () => (
   <div className="flex items-center justify-center h-full text-gray-600">
     <p className="text-2xl text-center font-serif italic max-w-3xl">
-      No agent running. Start a conversation in the chat to begin planning your
-      trip, researching topics, or use the general-purpose agent for other tasks!
+      <strong>Powered by CopilotKit 🪁</strong>
+      <br />
+      <br />
+      Start a conversation in the chat to begin planning your
+      trip, researching topics, or use the MCP agent for other tasks!
     </p>
   </div>
 );
@@ -95,7 +98,7 @@ export default function Canvas() {
 
           <div className="bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg">
             <CircleOff className="inline-block w-4 h-4 mr-2 animate-spin" />
-            <span className="font-bold">No Agent Running</span>
+            <span className="font-bold">Agent is waiting</span>
           </div>
         </div>
       )}
