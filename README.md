@@ -38,6 +38,12 @@ Make sure you have:
 
 ## Running the Frontend
 
+Rename the `example.env` file in the `frontend` folder to `.env`:
+
+```sh
+NEXT_PUBLIC_CPK_PUBLIC_API_KEY=...
+```
+
 Install dependencies:
 
 ```sh
@@ -45,11 +51,7 @@ cd frontend
 pnpm i
 ```
 
-## Rename the `example.env` file in the `frontend` folder to `.env`:
 
-```sh
-NEXT_PUBLIC_CPK_PUBLIC_API_KEY=...
-```
 
 Need a CopilotKit API key? Get one [here](https://cloud.copilotkit.ai/).
 
@@ -76,7 +78,7 @@ The MCP Agent allows you to connect to various MCP-compatible servers:
 
 ## Running the MCP Agent Backend (Optional)
 
-## Rename the `example.env` file in the `agent` folder to `.env`:
+Rename the `example.env` file in the `agent` folder to `.env`:
 
 ```sh
 OPENAI_API_KEY=...
