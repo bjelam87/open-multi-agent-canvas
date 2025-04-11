@@ -24,8 +24,8 @@ Additionally, this project now includes a built-in MCP (Multi-Channel Protocol) 
 
 ## Copilot Cloud is required to run this project: 
 
-Add 2 new remote endpoints, one for each agent.
-![CleanShot 2025-02-20 at 14 16 42@2x](https://github.com/user-attachments/assets/da415736-c862-481f-b9c2-2ca63297ac5d)
+
+
 
 ## Quick Start 🚀
 
@@ -92,6 +92,14 @@ cd agent
 poetry install
 poetry run langgraph dev --host localhost --port 8123 --no-browser
 ```
+
+## Running a tunnel
+
+Add another terminal and select Remote Endpoint.
+Then select Local Development.
+Once this is done, copy the command into your terminal and change the port to match the LangGraph server `8123`
+![image](https://github.com/user-attachments/assets/6bf41042-9529-4470-8baf-dd076aad31a1)
+
 
 ## Documentation 
 - [CopilotKit Docs](https://docs.copilotkit.ai/coagents)
