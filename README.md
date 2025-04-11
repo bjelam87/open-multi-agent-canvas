@@ -45,8 +45,9 @@ cd frontend
 pnpm i
 ```
 
-## Create a .env file in the frontend folder with:
-```
+## Rename the `example.env` file in the `frontend` folder to `.env`:
+
+```sh
 NEXT_PUBLIC_CPK_PUBLIC_API_KEY=...
 ```
 
@@ -54,8 +55,8 @@ Need a CopilotKit API key? Get one [here](https://cloud.copilotkit.ai/).
 
 Then, fire up the Next.js project:
 
-```
-pnpm run dev
+```sh
+pnpm run build && pnpm run start
 ```
 
 ## MCP Agent Setup
@@ -74,6 +75,13 @@ The MCP Agent allows you to connect to various MCP-compatible servers:
    - You can connect to public MCP servers like [mcp.composio.dev](https://mcp.composio.dev/) and [mcp.run](https://www.mcp.run/)
 
 ## Running the MCP Agent Backend (Optional)
+
+## Rename the `example.env` file in the `agent` folder to `.env`:
+
+```sh
+OPENAI_API_KEY=...
+LANGSMITH_API_KEY=...
+```
 
 If you want to use the included MCP Agent with the built-in math server:
 
