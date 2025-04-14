@@ -41,6 +41,16 @@ export default function MapComponent() {
   const [center, setCenter] = useState<LatLngTuple>([0, 0]);
   const hasProcessedTrips = useRef(false);
   const hasInProgress = useRef(false);
+  
+  const researchAgentActive = useRef(false);
+  const { running: researchAgentRunning } = useCoAgent({
+    name: AvailableAgents.RESEARCH_AGENT,
+  });
+
+  if (researchAgentRunning !== researchAgentActive.current) {
+    researchAgentActive.current = researchAgentRunning;
+  }
+
   const { stop: stopTravelAgent } = useCoAgent({
     name: AvailableAgents.TRAVEL_AGENT,
   });
@@ -311,20 +321,34 @@ export default function MapComponent() {
     },
   });
 
+  // Show skeleton during initial load or research
   if (hasInProgress.current) {
     return <Skeletons.MapSkeleton />;
   }
 
+  // Return null for initial state when no points are set
   if (!pointsFrom.length) {
     return null;
   }
 
+  // Show map with points
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
-      <Map center={center} zoom={13} style={{ height: "100%", width: "100%" }}>
+    <div style={{ height: "100vh", width: "100%", position: "relative" }}>
+      <Map 
+        center={center} 
+        zoom={13} 
+        style={{ height: "100%", width: "100%" }}
+        className="leaflet-container"
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          className="leaflet-tile-container"
+          maxZoom={19}
+          minZoom={3}
+          updateWhenZooming={false}
+          updateWhenIdle={true}
+          keepBuffer={2}
         />
         {pointsFrom.map((point) => (
           <Marker
@@ -339,6 +363,11 @@ export default function MapComponent() {
           </Marker>
         ))}
       </Map>
+      {researchAgentActive.current && (
+        <div className="absolute inset-0 z-[100] pointer-events-none">
+          <div className="w-full h-full bg-[url('/map-overlay.png')] bg-cover bg-center bg-no-repeat" />
+        </div>
+      )}
     </div>
   );
 }
