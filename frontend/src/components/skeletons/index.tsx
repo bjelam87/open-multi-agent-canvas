@@ -114,26 +114,8 @@ export const GenericSkeleton: FC = () => (
 
 export const MapSkeleton: FC = () => (
   <div className="w-full h-full relative">
-    <Skeleton className="h-full w-full rounded-lg" />
-
-    {/* Map tiles simulation */}
-    <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 gap-1 p-2">
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div
-          key={i}
-          className="bg-gray-300/30 rounded border border-gray-400/20"
-        />
-      ))}
-    </div>
-
-    {/* Map pins simulation */}
     <div className="absolute inset-0">
-      <div className="absolute top-1/3 left-1/3">
-        <div className="w-8 h-8 bg-[url('/icon.png')] bg-contain bg-no-repeat bg-center animate-pulse opacity-70" />
-      </div>
-      <div className="absolute bottom-1/3 right-1/3">
-        <div className="w-8 h-8 bg-[url('/icon.png')] bg-contain bg-no-repeat bg-center animate-pulse opacity-70" />
-      </div>
+      <div className="w-full h-full bg-[url('/map-overlay.png')] bg-cover bg-center bg-no-repeat" />
     </div>
   </div>
 );

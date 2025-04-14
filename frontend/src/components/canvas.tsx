@@ -98,7 +98,7 @@ export default function Canvas() {
 
           <div className="bg-gray-600 text-white px-4 py-2 rounded-full shadow-lg">
             <CircleOff className="inline-block w-4 h-4 mr-2 animate-spin" />
-            <span className="font-bold">Agent is waiting</span>
+            <span className="font-bold">Multi-Agent</span>
           </div>
         </div>
       )}
