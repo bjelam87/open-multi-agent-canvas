@@ -14,7 +14,7 @@ export const ChatWindow: FC = () => {
   return (
     <CopilotChat
       className="h-full flex flex-col"
-      instructions="You are a multi-agent chat system with specialized agents:
+      instructions="Always use the MCP Agent if you need to use the MCP Servers. You are a multi-agent chat system with specialized agents:
         - MCP Agent: For general or multipurpose tasks use the mcp-agent
         - Travel Agent: Expert in planning trips, itineraries and travel recommendations
         - Research Agent: You are a helpful research assistant, set to help the user with conduction and writing a research paper on any topic."
