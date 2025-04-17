@@ -104,7 +104,7 @@ Once this is done, copy the command into your terminal and change the port to ma
 ## Documentation 
 - [CopilotKit Docs](https://docs.copilotkit.ai/coagents)
 - [LangGraph Platform Docs](https://langchain-ai.github.io/langgraph/cloud/deployment/cloud/)
-- [Multi-Channel Protocol (MCP) Docs](https://github.com/langchain-ai/langgraph/tree/main/examples/mcp)
+- [Model Context Protocol (MCP) Docs](https://github.com/langchain-ai/langgraph/tree/main/examples/mcp)
 
 ## License
 Distributed under the MIT License. See LICENSE for more info.
