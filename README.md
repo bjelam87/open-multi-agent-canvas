@@ -30,36 +30,41 @@ Additionally, this project now includes a built-in MCP (Multi-Channel Protocol) 
 ## Quick Start 🚀
 
 ### 1. Prerequisites
+
 Make sure you have:
+
+- Node.js (LTS recommended)
 - [pnpm](https://pnpm.io/installation)
+- Python 3.10–3.12 (for the optional MCP Agent backend)
+   - Optional: [Poetry](https://python-poetry.org/docs/#installation)
 
 ### 2. API Keys
-- [Copilot Cloud](https://cloud.copilotkit.ai)
+
+- Copilot Cloud API key from <https://cloud.copilotkit.ai>
 
 ## Running the Frontend
 
-Rename the `example.env` file in the `frontend` folder to `.env`:
+Create (or edit) `frontend/.env` with your Copilot Cloud public key:
 
 ```sh
-NEXT_PUBLIC_CPK_PUBLIC_API_KEY=...
+NEXT_PUBLIC_COPILOT_CLOUD_API_KEY=...
 ```
 
-Install dependencies:
+Install dependencies and run (PowerShell on Windows):
 
-```sh
+```powershell
 cd frontend
-pnpm i
+pnpm install
+pnpm dev
 ```
 
+Production build + start (optional):
 
-
-Need a CopilotKit API key? Get one [here](https://cloud.copilotkit.ai/).
-
-Then, fire up the Next.js project:
-
-```sh
-pnpm run build && pnpm run start
+```powershell
+pnpm build
+$env:PORT=3010; pnpm start
 ```
+If port 3000 is busy, Next.js will fall back to 3001 in dev or you can set a custom port for prod as shown above.
 
 ## MCP Agent Setup
 
@@ -78,33 +83,73 @@ The MCP Agent allows you to connect to various MCP-compatible servers:
 
 ## Running the MCP Agent Backend (Optional)
 
-Rename the `example.env` file in the `agent` folder to `.env`:
+Copy `agent/example.env` to `agent/.env` and set:
 
 ```sh
-OPENAI_API_KEY=...
-LANGSMITH_API_KEY=...
+OPENAI_API_KEY=...       # required for the agent LLM
+LANGSMITH_API_KEY=...    # optional
 ```
 
-If you want to use the included MCP Agent with the built-in math server:
+Run using Poetry (recommended):
 
-```sh
+```powershell
 cd agent
 poetry install
 poetry run langgraph dev --host localhost --port 8123 --no-browser
 ```
 
-## Running a tunnel
+Run using a virtual environment (alternative):
+
+```powershell
+cd agent
+python -m venv .venv
+.\.venv\Scripts\Activate
+python -m pip install -U pip
+python -m pip install "langgraph-cli[inmem]==0.1.64" fastmcp "langchain-openai>=0.2.1" "langchain-mcp-adapters>=0.0.3" "langchain>=0.3.1" uvicorn "python-dotenv>=1.0.1" "copilotkit==0.1.39"
+.\.venv\Scripts\langgraph.exe dev --host localhost --port 8123 --no-browser --config "c:\\Users\\<you>\\path\\to\\repo\\agent\\langgraph.json"
+```
+
+Quick helper (PowerShell):
+
+```powershell
+# from repo root
+./run-agent.ps1 -Port 8123 -Host localhost
+```
+
+To use the built-in math MCP server over STDIO instead of SSE, you can add:
+
+```powershell
+Command: python
+Args: agent/math_server.py
+```
+
+## Connect from the UI (MCP Servers)
+
+In the app (top-right), open “MCP Servers” and add either:
+
+- SSE: URL <http://localhost:8123>
+- STDIO: Command python, Args `agent/math_server.py`
+
+## Running a tunnel (optional)
 
 Add another terminal and select Remote Endpoint.
 Then select Local Development.
 Once this is done, copy the command into your terminal and change the port to match the LangGraph server `8123`
+
+## Troubleshooting
+
+- ChunkLoadError or stale assets in dev: close the dev server, delete `frontend/.next`, then `pnpm build` and `pnpm start` (use a clean port like 3010). Hard refresh the browser (Ctrl+F5).
+- Frontend env var: the correct var is `NEXT_PUBLIC_COPILOT_CLOUD_API_KEY`.
+- MCP server not reachable: confirm <http://localhost:8123> responds and re-add the SSE server in “MCP Servers”. If you start outside the `agent` folder, pass `--config agent/langgraph.json`.
 ![image](https://github.com/user-attachments/assets/6bf41042-9529-4470-8baf-dd076aad31a1)
 
 
-## Documentation 
+## Documentation
+
 - [CopilotKit Docs](https://docs.copilotkit.ai/coagents)
 - [LangGraph Platform Docs](https://langchain-ai.github.io/langgraph/cloud/deployment/cloud/)
 - [Model Context Protocol (MCP) Docs](https://github.com/langchain-ai/langgraph/tree/main/examples/mcp)
 
 ## License
+
 Distributed under the MIT License. See LICENSE for more info.

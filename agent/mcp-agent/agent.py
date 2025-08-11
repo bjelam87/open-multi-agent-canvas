@@ -3,11 +3,10 @@ This is the main entry point for the agent.
 It defines the workflow graph, state, tools, nodes and edges.
 """
 
-from typing_extensions import Literal, TypedDict, Dict, List, Any, Union, Optional
+from typing_extensions import Literal, TypedDict, Dict, List, Union, Optional
 from langchain_openai import ChatOpenAI
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import StateGraph, END
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.types import Command
 from copilotkit import CopilotKitState
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -136,5 +135,6 @@ workflow = StateGraph(AgentState)
 workflow.add_node("chat_node", chat_node)
 workflow.set_entry_point("chat_node")
 
-# Compile the workflow graph
-graph = workflow.compile(MemorySaver())
+# Compile the workflow graph without a custom checkpointer.
+# LangGraph API manages persistence; custom checkpointers are ignored and can cause errors.
+graph = workflow.compile()

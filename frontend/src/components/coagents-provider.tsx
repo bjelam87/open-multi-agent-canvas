@@ -91,7 +91,8 @@ export const CoAgentsProvider = ({
   const [savedConfigs] = useLocalStorage<Record<string, ServerConfig>>(MCP_STORAGE_KEY, {});
   
   // Set the ref value once we have the saved configs
-  if (Object.keys(savedConfigs).length > 0 && Object.keys(configsRef.current).length === 0) {
+  // Initialize from saved configs if available; otherwise leave empty so the backend default applies
+  if (Object.keys(configsRef.current).length === 0 && Object.keys(savedConfigs).length > 0) {
     configsRef.current = savedConfigs;
   }
 
@@ -110,13 +111,19 @@ export const CoAgentsProvider = ({
     },
   });
 
-  const { state: mcpAgentState } = useCoAgent({
+  // Only pass mcp_config if there are saved configs; otherwise let the backend default apply
+  const baseMcpInitialState: MCPAgentState = {
+    response: "",
+    logs: [],
+  };
+  const mcpInitialState =
+    Object.keys(configsRef.current).length > 0
+      ? { ...baseMcpInitialState, mcp_config: configsRef.current }
+      : baseMcpInitialState;
+
+  const { state: mcpAgentState } = useCoAgent<MCPAgentState>({
     name: AvailableAgents.MCP_AGENT,
-    initialState: {
-      response: "",
-      logs: [],
-      mcp_config: configsRef.current,
-    },
+    initialState: mcpInitialState,
   });
 
   return (

@@ -1,0 +1,67 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Start Frontend",
+			"type": "shell",
+			"command": "pnpm",
+			"args": [
+				"dev"
+			],
+			"group": "build",
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/frontend"
+			}
+		},
+		{
+			"label": "Run LangGraph MCP Agent",
+			"type": "shell",
+			"command": "python",
+			"args": [
+				"-m",
+				"langgraph_cli",
+				"dev",
+				"--host",
+				"localhost",
+				"--port",
+				"8123",
+				"--no-browser"
+			],
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "Run LangGraph MCP Agent (venv)",
+			"type": "shell",
+			"command": "C:/Users/bjela/OneDrive/Documents/GitHub/open-multi-agent-canvas/.venv/Scripts/python.exe",
+			"args": [
+				"-m",
+				"langgraph_cli",
+				"dev",
+				"--host",
+				"localhost",
+				"--port",
+				"8123",
+				"--no-browser"
+			],
+			"isBackground": true,
+			"group": "build"
+		},
+		{
+			"label": "LangGraph Dev (agent)",
+			"type": "shell",
+			"command": "c:\\Users\\bjela\\OneDrive\\Documents\\GitHub\\open-multi-agent-canvas\\.venv\\Scripts\\langgraph.exe",
+			"args": [
+				"dev",
+				"--host",
+				"localhost",
+				"--port",
+				"8123",
+				"--no-browser"
+			],
+			"isBackground": true,
+			"group": "build"
+		}
+	]
+}
